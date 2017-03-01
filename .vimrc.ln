@@ -206,6 +206,11 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
+let g:syntastic_mode_map = { 'passive_filetypes': ['python'] }
+let g:pymode_lint_on_write = 0
+let g:pymode_rope_lookup_project = 0
+let g:pymode_rope = 0
+autocmd VimEnter * SyntasticToggleMode " Syntastic passive mode by default
 
 "------------------------------------------------------------
 " merlin and ocp-indent for ocaml
@@ -227,6 +232,15 @@ autocmd FileType octave let b:match_words = '\<if\>\|\<while\>\|\<for\>\|\<switc
        \ s:conditionalEnd . ',\<if\>:\<elseif\>:\<else\>:' . s:conditionalEnd
 
 "------------------------------------------------------------
+" Syntastic
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 1
 
 "------------------------------------------------------------
 " Octave syntax

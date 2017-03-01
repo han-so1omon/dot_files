@@ -132,6 +132,25 @@ export GOPATH=/home/eric/Documents/Experiments/go_code
 export PKG_CONFIG_PATH=/opt/ros/indigo/lib/pkgconfig
 export QT_SELECT=qt5_manual_install
 
+# Set up my objects directory
+if [ -d /home/eric/Objs ]; then
+  export ERIC_OBJS_DIR=/home/eric/Objs
+fi
+
+# Set up my libraries path
+if [ -d /home/eric/Libs ]; then
+  export MY_LIBS_PATH=/home/eric/Libs
+  case ":$LD_LIBRARY_PATH:" in
+    *":$MY_LIBS_PATH:"*) :;;
+    *) export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$MY_LIBS_PATH";;
+  esac
+fi
+
+# Set up my includes path
+if [ -d /home/eric/Includes ]; then
+  export MY_INCLUDES_PATH=/home/eric/Includes
+fi
+
 # Set up ros
 if [ -f /opt/ros/indigo/setup.bash ]; then
   source /opt/ros/indigo/setup.bash
@@ -157,6 +176,14 @@ fi
 # Add tum_simulator to ROS package path
 if [ -d /home/eric/Programs/tum_simulator ]; then
   export ROS_PACKAGE_PATH="$ROS_PACKAGE_PATH:/home/eric/Programs/tum_simulator"
+fi
+
+# Setup TerpCopter
+if [ -d /home/eric/Programs/catkin_ws/src/TerpCopter ]; then
+  export TERPCOPTER_DIR="/home/eric/Programs/catkin_ws/src/TerpCopter/"
+  if [ -d $TERPCOPTER_DIR/tools ]; then
+    export TERPCOPTER_TOOLS="$TERPCOPTER_DIR/tools/"
+  fi
 fi
 
 # Set ROS_IP
@@ -206,13 +233,13 @@ if [ -d ${QRL_INSTALL_ROOT}/gcc-linaro-arm-linux-gnueabihf-4.8-2013.08_linux/bin
 fi
 
 #FIXME qrl 3.1.2 not working yet, but switch back when it is
-if [ -d ${HEXAGON_INSTALL_HOME}/Qualcomm/qrlinux_v3.1.1_sysroot ]; then
-  export HEXAGON_ARM_SYSROOT="${HEXAGON_INSTALL_HOME}/Qualcomm/qrlinux_v3.1.1_sysroot"
+if [ -d ${QRL_INSTALL_ROOT}/sysroots/eagle8074/ ]; then
+  export HEXAGON_ARM_SYSROOT="${QRL_INSTALL_ROOT}/sysroots/eagle8074"
 fi
 
 # QCom flight controller 3.0 addon
-if [ -d ${HOME}/Programs/Snapdragon/qualcomm_hexagon/qcom_flight_controller_hexagon ]; then
-  export FC_ADDON="${HOME}/Programs/Snapdragon/qualcomm_hexagon/qcom_flight_controller_hexagon"
+if [ -d ${HOME}/Programs/Snapdragon/qualcomm_hexagon/qcom_flight_controller_hexagon_sdk_add_on ]; then
+  export FC_ADDON="${HOME}/Programs/Snapdragon/qualcomm_hexagon/qcom_flight_controller_hexagon_sdk_add_on"
 fi
 
 # SoundwireServer
@@ -274,6 +301,18 @@ fi
 if [ -f ${HOME}/Programs/waf-1.9.4/waf ]; then
   alias waf='${HOME}/Programs/waf-1.9.4/waf'
   el="${HOME}/Programs/waf-1.9.4"
+  case ":$PATH:" in
+    *":$el:"*) :;;
+    *) export PATH="$PATH:$el";;
+  esac
+fi
+
+if [ -d ${HOME}/Programs/raspi ]; then
+  export RASPI_HOME="${HOME}/Programs/raspi"
+fi
+
+if [ -f /usr/lib/insserv/insserv ]; then
+  el="/usr/lib/insserv"
   case ":$PATH:" in
     *":$el:"*) :;;
     *) export PATH="$PATH:$el";;
