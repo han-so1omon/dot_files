@@ -163,9 +163,28 @@ fi
 #fi
 
 # Set up catkin_ws
-if [ -d /home/eric/Programs/catkin_ws/devel ]; then
-  export CATKIN_HOME=/home/eric/Programs/catkin_ws
-  source /home/eric/Programs/catkin_ws/devel/setup.bash
+#if [ -d /home/eric/Programs/catkin_ws/devel ]; then
+#  export CATKIN_HOME=/home/eric/Programs/catkin_ws
+#  source /home/eric/Programs/catkin_ws/devel/setup.bash
+#fi
+
+# Set up catkin_ws
+if [ -d /home/eric/Programs/snapdragon_ws/devel ]; then
+  export CATKIN_HOME=/home/eric/Programs/snapdragon_ws
+  source /home/eric/Programs/snapdragon_ws/devel/setup.bash
+fi
+
+# Set up snapdragon env
+if [ -d /home/eric/Programs/Snapdragon ]; then
+  export SNAPDRAGON_HOME=/home/eric/Programs/Snapdragon
+fi
+
+if [ -d /home/eric/Programs/Snapdragon/Tests ]; then
+  export SNAPDRAGON_TESTS=/home/eric/Programs/Snapdragon/Tests
+fi
+
+if [ -d /home/eric/Programs/Snapdragon/Tests ]; then
+  export SNAPDRAGON_SETUP=/home/eric/Programs/Snapdragon/SnapdragonSetup
 fi
 
 # Add gazebo models to GAZEBO_MODEL_PATH
@@ -189,10 +208,6 @@ fi
 # Set ROS_IP
 export ROS_IP=$(hostname -I | awk '{print $1}')
 
-#if [ -d /home/eric/Documents/ElkaControlProject/Snapdragon/catkin_ws ]; then
-#  export ROS_PACKAGE_PATH="${ROS_PACKAGE_PATH}:/home/eric/Documents/ElkaControlProject/Snapdragon/catkin_ws"
-#fi
-
 if [ "x`echo $PATH | grep '/opt/cmake-3.4.3-Linux-x86_64/bin'`" = "x" ]; then
   el=/opt/cmake-3.4.3-Linux-x86_64/bin
   case ":$PATH:" in
@@ -211,7 +226,13 @@ fi
 
 if [ -d ${HEXAGON_INSTALL_HOME}/Qualcomm/Hexagon_SDK/3.0 ]; then
   export HEXAGON_SDK_ROOT="${HEXAGON_INSTALL_HOME}/Qualcomm/Hexagon_SDK/3.0"
-  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HEXAGON_SDK_ROOT/tools/libusb/
+  el=$HEXAGON_SDK_ROOT/tools/libusb/
+case ":$LD_LIBRARY_PATH:" in
+  *":$el:"*) :;;
+  *) export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$el";;
+esac
+
+
 fi
 
 if [ -d ${HEXAGON_INSTALL_HOME}/Qualcomm/HEXAGON_Tools/7.2.12/Tools ]; then
@@ -272,17 +293,48 @@ fi
 # PX4 firmware home directory
 if [ -d ${HOME}/Programs/px4/Firmware ]; then
   export PX4_FIRMWARE="${HOME}/Programs/px4/Firmware"
+  # Set BEBOP_IP
+  export BEBOP_IP="192.168.42.1"
 fi
 
 # PX4 path directories
 if [ -d ${PX4_FIRMWARE}/src/platforms ]; then
-  export PX4_PATH="${PX4_PATH}:${PX4_FIRMWARE}/src/platforms"
+  el="${PX4_FIRMWARE}/src/platforms"
+  case ":$PX4_PATH" in
+    *":$el:"*) :;;
+    *) export PX4_PATH="$PX4_PATH:$el";;
+  esac
 fi
 if [ -d ${PX4_FIRMWARE}/src/include ]; then
-  export PX4_PATH="${PX4_PATH}:${PX4_FIRMWARE}/src/include"
+  el="${PX4_FIRMWARE}/src/include"
+  case ":$PX4_PATH" in
+    *":$el:"*) :;;
+    *) export PX4_PATH="$PX4_PATH:$el";;
+  esac
 fi
 if [ -d ${PX4_FIRMWARE}/src/lib ]; then
-  export PX4_PATH="${PX4_PATH}:${PX4_FIRMWARE}/src/lib"
+  el="${PX4_FIRMWARE}/src/lib"
+  case ":$PX4_PATH" in
+    *":$el:"*) :;;
+    *) export PX4_PATH="$PX4_PATH:$el";;
+  esac
+fi
+
+# ELKA path directories
+if [ -d ${HOME}/Programs/elka ]; then
+  export ELKA_HOME="${HOME}/Programs/elka"
+fi
+if [ -d ${ELKA_HOME}/elka_firmware ]; then
+  export ELKA_FIRMWARE="${ELKA_HOME}/elka_firmware/elka_firmware"
+fi
+if [ -d ${ELKA_HOME}/elka_comm ]; then
+  export ELKA_COMM_DIR="${ELKA_HOME}/elka_comm"
+fi
+if [ -d ${ELKA_HOME}/elka_control ]; then
+  export ELKA_CONTROL_DIR="${ELKA_HOME}/elka_control"
+fi
+if [ -d ${ELKA_HOME}/elka_data_collection ]; then
+  export ELKA_DATA_COLLECTION_DIR="${ELKA_HOME}/elka_data_collection"
 fi
 
 # DSPAL path directory
@@ -319,6 +371,34 @@ if [ -f /usr/lib/insserv/insserv ]; then
   esac
 fi
 
+if [ -d /opt/gradle/gradle-4.1/bin ]; then
+  el="/opt/gradle/gradle-4.1/bin"
+  case ":$PATH:" in
+    *":$el:"*) :;;
+    *) export PATH="$PATH:$el";;
+  esac
+fi
+
+if [ -d /home/eric/Documents/School ]; then
+  export SCHOOL_HOME="${HOME}/Documents/School"
+fi
+
+if [ -d /home/eric/Programs/vlfeat/vlfeat-0.9.20 ]; then
+  export VLFEATROOT="${HOME}/Programs/vlfeat/vlfeat-0.9.20"
+fi
+
+#Add libraries necessary for matlab to LD_RUN_PATH
+el="/usr/local/lib"
+case ":$LD_RUN_PATH:" in
+  *":$el:"*) :;;
+  *) export LD_RUN_PATH="$LD_RUN_PATH:$el";;
+esac
+case ":$LD_LIBRARY_PATH:" in
+  *":$el:"*) :;;
+  *) export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$el";;
+esac
+
+
 ##########################################################################
 # Define aliases
 
@@ -338,3 +418,6 @@ alias script_dir='( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )'
 # alias SCRIPT_DIR="(dirname $(readlink -e ${BASH_SOURCE}))"
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+export TERPCOPTER_IP=192.168.0.243
+export MY_PC_IP=192.168.0.106

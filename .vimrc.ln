@@ -12,6 +12,7 @@
 " Set 'nocompatible' to ward off unexpected things that your distro might
 " have made, as well as sanely reset options when re-sourcing .vimrc
 set nocompatible
+set nobackup
 
 " Attempt to determine the type of a file based on its name and possibly its
 " contents. Use this to allow intelligent auto-indenting for each filetype,
@@ -39,6 +40,12 @@ Plugin 'nanotech/jellybeans.vim'
 " June Gunn's fuzzy finder
 Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plugin 'junegunn/fzf.vim'
+" ctrlp vim tags
+Plugin 'ctrlpvim/ctrlp.vim'
+" vim tagbar
+Plugin 'majutsushi/tagbar'
+" NERDtree file sidebar
+Plugin 'scrooloose/nerdtree'
 call vundle#end()         " required
 
 filetype plugin indent on " required
@@ -197,19 +204,19 @@ set tabpagemax=100
 execute pathogen#infect()
 call pathogen#infect()
 
-set statusline+=%#warningmsg#
-set statusline+=%{exists('g:loaded_syntastic_plugin')?SyntasticStatuslineFlag():''}
-"set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+"set statusline+=%#warningmsg#
+"set statusline+=%{exists('g:loaded_syntastic_plugin')?SyntasticStatuslineFlag():''}
+""set statusline+=%{SyntasticStatuslineFlag()}
+"set statusline+=%*
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-let g:syntastic_mode_map = { 'passive_filetypes': ['python'] }
-let g:pymode_lint_on_write = 0
-let g:pymode_rope_lookup_project = 0
-let g:pymode_rope = 0
+"let g:syntastic_always_populate_loc_list = 1
+"let g:syntastic_auto_loc_list = 1
+"let g:syntastic_check_on_open = 1
+"let g:syntastic_check_on_wq = 0
+"let g:syntastic_mode_map = { 'passive_filetypes': ['python'] }
+"let g:pymode_lint_on_write = 0
+"let g:pymode_rope_lookup_project = 0
+"let g:pymode_rope = 0
 autocmd VimEnter * SyntasticToggleMode " Syntastic passive mode by default
 
 "------------------------------------------------------------
@@ -232,35 +239,27 @@ autocmd FileType octave let b:match_words = '\<if\>\|\<while\>\|\<for\>\|\<switc
        \ s:conditionalEnd . ',\<if\>:\<elseif\>:\<else\>:' . s:conditionalEnd
 
 "------------------------------------------------------------
-" Syntastic
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 1
-
-"------------------------------------------------------------
 " Octave syntax
 augroup filetypedetect
-  au! BufRead,BufNewFile *.m,*.oct set filetype=octave
+  au! BufRead,BufNewFile *.m,*.oct set filetype=matlab
 augroup END
 " Use keywords from Octave syntax language file for autocomplete
-if has("autocmd") && exists("+omnifunc")
-  autocmd Filetype octave
-        \if &omnifunc=="" |
-        \setlocal omnifunc=syntaxcomplete#Complete |
-        \endif
-endif
+"if has("autocmd") && exists("+omnifunc")
+"  autocmd Filetype octave
+"        \if &omnifunc=="" |
+"        \setlocal omnifunc=syntaxcomplete#Complete |
+"        \endif
+"endif
 
 " when editing a *.m file, type 'K' in normal mode and the word under the cursor
 " will be searched for in the GNU Octave documentation index. Pressing ','
 " yields the next occurrence
 autocmd FileType matlab setlocal keywordprg=info\ octave\ --vi-keys\ --index-search
+" autocmd FileType matlab setlocal keywordprg=info\ matlab\ --vi-keys\ --index-search
+"
+let g:syntastic_mode_map = { 'passive_filetypes': ['matlab'] }
 
-"------------------------------------------------------------
+"-----------------------------------------------------------"
 " Mappings {{{1
 "
 " Useful mappings
@@ -326,17 +325,30 @@ nmap <leader><tab> <plug>(fzf-maps-n)
 xmap <leader><tab> <plug>(fzf-maps-x)
 omap <leader><tab> <plug>(fzf-maps-o)
 
+
 " Insert mode completion
 imap <c-x><c-k> <plug>(fzf-complete-word)
 imap <c-x><c-f> <plug>(fzf-complete-path)
 imap <c-x><c-j> <plug>(fzf-complete-file-ag)
 imap <c-x><c-l> <plug>(fzf-complete-line)
 
+
 " Advanced customization using autoload functions
 inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '15%'})
+
 
 " Replace the default dictionary completion with fzf-based
 " fuzzy completion
 inoremap <expr> <c-x><c-k> fzf#complete('cat /usr/share/dict/words')
 
+
+" Vim + Ctags + Ctrlp
+nnoremap <leader>. :CtrlPTag<cr>
+
+
+" Tagbar
+nmap <F8> :TagbarToggle<CR>
+
+" NERDtree
+map <C-n> :NERDTreeToggle<CR>
 "------------------------------------------------------------
