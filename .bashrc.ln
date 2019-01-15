@@ -37,7 +37,7 @@ fi
 
 # set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
-    xterm-color) color_prompt=yes;;
+    xterm-color|*-256color) color_prompt=yes;;
 esac
 
 # uncomment for a colored prompt, if the terminal has the capability; turned
@@ -84,6 +84,9 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
+# colored GCC warnings and errors
+#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+
 # some more ls aliases
 alias ll='ls -alF'
 alias la='ls -A'
@@ -115,7 +118,7 @@ fi
 
 ###################################################################################
 # Define environment variables
-newentry=:/usr/lib/ccache:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/home/eric/Programs/android-studio/bin:/home/eric/Documents/ElkaControlProject/ElkaControl/run/linux:/home/eric/Documents/Experiments/go_code/bin:/home/eric/Android/Sdk/platform-tools:/home/eric/Programs/ninja:/home/eric/jsbsim/src:/home/eric/ardupilot/Tools/autotest
+newentry=:/usr/lib/ccache:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/home/eric/Documents/ElkaControlProject/ElkaControl/run/linux:/home/eric/Documents/Experiments/go_code/bin:/home/eric/Programs/ninja:/home/eric/jsbsim/src:/home/eric/ardupilot/Tools/autotest
 for el in ${newentry//:/ }; do
   case ":$PATH:" in
     *":$el:"*) :;;
@@ -128,9 +131,8 @@ export HOME=/home/eric
 export TMP=/tmp/user/1000
 export DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-tlj1VYwgOY
 export TMUX_PLUGIN_MANAGER_PATH=/home/eric/.tmux/plugins/
-export GOPATH=/home/eric/Documents/Experiments/go_code
-export PKG_CONFIG_PATH=/opt/ros/indigo/lib/pkgconfig
-export QT_SELECT=qt5_manual_install
+#export PKG_CONFIG_PATH=/opt/ros/indigo/lib/pkgconfig
+export PROGRAMS=${HOME}/Programs
 
 # Set up my objects directory
 if [ -d /home/eric/Objs ]; then
@@ -152,9 +154,9 @@ if [ -d /home/eric/Includes ]; then
 fi
 
 # Set up ros
-if [ -f /opt/ros/indigo/setup.bash ]; then
-  source /opt/ros/indigo/setup.bash
-fi
+#if [ -d /opt/ros/kinetic ]; then
+  #. /opt/ros/kinetic/setup.bash
+#fi
 
 # Set up cognifli
 #if [ -d /home/eric/Programs/cognifli/ ]; then
@@ -169,10 +171,10 @@ fi
 #fi
 
 # Set up catkin_ws
-if [ -d /home/eric/Programs/snapdragon_ws/devel ]; then
-  export CATKIN_HOME=/home/eric/Programs/snapdragon_ws
-  source /home/eric/Programs/snapdragon_ws/devel/setup.bash
-fi
+#if [ -d /home/eric/Programs/snapdragon_ws/devel ]; then
+  #export CATKIN_HOME=/home/eric/Programs/snapdragon_ws
+  #source /home/eric/Programs/snapdragon_ws/devel/setup.bash
+#fi
 
 # Set up snapdragon env
 if [ -d /home/eric/Programs/Snapdragon ]; then
@@ -187,15 +189,23 @@ if [ -d /home/eric/Programs/Snapdragon/Tests ]; then
   export SNAPDRAGON_SETUP=/home/eric/Programs/Snapdragon/SnapdragonSetup
 fi
 
+if [ -d $SNAPDRAGON_SETUP/libs ]; then
+  export SNAPDRAGON_LINK_LIBS_DIR=$SNAPDRAGON_SETUP/libs
+fi
+
+if [ -d $SNAPDRAGON_SETUP/incs ]; then
+  export SNAPDRAGON_INCS=$SNAPDRAGON_SETUP/incs
+fi
+
 # Add gazebo models to GAZEBO_MODEL_PATH
 if [ -d /home/eric/Libraries/gazebo_models ]; then
   export GAZEBO_MODEL_PATH=${GAZEBO_MODEL_PATH}:/home/eric/Libraries/gazebo_models
 fi
 
 # Add tum_simulator to ROS package path
-if [ -d /home/eric/Programs/tum_simulator ]; then
-  export ROS_PACKAGE_PATH="$ROS_PACKAGE_PATH:/home/eric/Programs/tum_simulator"
-fi
+#if [ -d /home/eric/Programs/tum_simulator ]; then
+  #export ROS_PACKAGE_PATH="$ROS_PACKAGE_PATH:/home/eric/Programs/tum_simulator"
+#fi
 
 # Setup TerpCopter
 if [ -d /home/eric/Programs/catkin_ws/src/TerpCopter ]; then
@@ -227,17 +237,18 @@ fi
 if [ -d ${HEXAGON_INSTALL_HOME}/Qualcomm/Hexagon_SDK/3.0 ]; then
   export HEXAGON_SDK_ROOT="${HEXAGON_INSTALL_HOME}/Qualcomm/Hexagon_SDK/3.0"
   el=$HEXAGON_SDK_ROOT/tools/libusb/
-case ":$LD_LIBRARY_PATH:" in
-  *":$el:"*) :;;
-  *) export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$el";;
-esac
-
-
+  case ":$LD_LIBRARY_PATH:" in
+    *":$el:"*) :;;
+    *) export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$el";;
+  esac
 fi
 
 if [ -d ${HEXAGON_INSTALL_HOME}/Qualcomm/HEXAGON_Tools/7.2.12/Tools ]; then
-  export HEXAGON_TOOLS_ROOT="${HEXAGON_INSTALL_HOME}/Qualcomm/HEXAGON_Tools/7.2.12/Tools"
+   export HEXAGON_TOOLS_ROOT="${HEXAGON_INSTALL_HOME}/Qualcomm/HEXAGON_Tools/7.2.12/Tools"
 fi
+#if [ -d ${HEXAGON_INSTALL_HOME}/Qualcomm/HEXAGON_Tools/8.1.05/Tools ]; then
+#   export HEXAGON_TOOLS_ROOT="${HEXAGON_INSTALL_HOME}/Qualcomm/HEXAGON_Tools/8.1.05/Tools"
+#fi
 
 # if [ -d ${HEXAGON_SDK_ROOT}/gcc-linaro-4.9-2014.11-x86_64_arm-linux-gnueabihf_linux/bin ]; then
 #   [ `echo PATH | grep gcc-linaro-4\.[a-z0-9\.\_\-]*/bin` ] || \
@@ -281,7 +292,7 @@ if [ -d ${HOME}/Programs/bake ]; then
     *) export PATH="$PATH:$el";;
   esac
 
-  newentry_python=${PATH}:$BAKE_HOME  
+  newentry_python=$BAKE_HOME  
   for el in ${newentry_python//:/ }; do
     case ":$PYTHONPATH:" in
       *":$el:"*) :;;
@@ -338,8 +349,8 @@ if [ -d ${ELKA_HOME}/elka_data_collection ]; then
 fi
 
 # DSPAL path directory
-if [ -d ${HOME}/Programs/Snapdragon/ATLFlight/dspal ]; then
-	export DSPAL_PATH="${HOME}/Programs/Snapdragon/ATLFlight/dspal"
+if [ -d ${HOME}/Programs/Snapdragon/dspal ]; then
+	export DSPAL_PATH="${HOME}/Programs/Snapdragon/dspal"
 fi
 
 if [ -d ${HOME}/Scripts ]; then
@@ -387,7 +398,7 @@ if [ -d /home/eric/Programs/vlfeat/vlfeat-0.9.20 ]; then
   export VLFEATROOT="${HOME}/Programs/vlfeat/vlfeat-0.9.20"
 fi
 
-#Add libraries necessary for matlab to LD_RUN_PATH
+# Add libraries necessary for matlab to LD_RUN_PATH
 el="/usr/local/lib"
 case ":$LD_RUN_PATH:" in
   *":$el:"*) :;;
@@ -398,18 +409,147 @@ case ":$LD_LIBRARY_PATH:" in
   *) export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$el";;
 esac
 
+# Julia
+if [ -d ${PROGRAMS}/julia ]; then
+  el=${PROGRAMS}/julia/bin
+  case ":$PATH:" in
+    *":$el:"*) :;;
+    *) export PATH="$PATH:$el";;
+  esac
+fi
+
+# QT5
+if [ -d ${PROGRAMS}/Qt/Qt5.7.0 ]; then
+  export QT_SELECT=qt5_manual_install
+  el=${PROGRAMS}/Qt/Qt5.7.0/5.7/gcc_64
+  case ":$CMAKE_PREFIX_PATH:" in
+    *":$el:"*) :;;
+    *) export CMAKE_PREFIX_PATH="$CMAKE_PREFIX_PATH:$el";;
+  esac
+fi
+
+# Erlang
+if [ -d ${PROGRAMS}/erlang/otp/bin ]; then
+  el=${PROGRAMS}/erlang/otp/bin
+  case ":$PATH:" in
+    *":$el:"*) :;;
+    *) export PATH="$PATH:$el";;
+  esac
+fi
+
+# Elixir
+if [ -d ${PROGRAMS}/elixir/bin ]; then
+  el=${PROGRAMS}/elixir/bin
+  case ":$PATH:" in
+    *":$el:"*) :;;
+    *) export PATH="$PATH:$el";;
+  esac
+fi
+
+# Android platform tools
+if [ -d ${PROGRAMS}/android/platform-tools ]; then
+  el=${PROGRAMS}/android/platform-tools
+  case ":$PATH:" in
+    *":$el:"*) :;;
+    *) export PATH="$PATH:$el";;
+  esac
+fi
+
+# Golang
+if [ -d ${PROGRAMS}/go ]; then
+  export GOROOT=${PROGRAMS}/go
+  el=${GOROOT}/bin
+  case ":$PATH:" in
+    *":$el:"*) :;;
+    *) export PATH="$PATH:$el";;
+  esac
+fi
+
+# Slowdrone
+if [ -d ${PROGRAMS}/slow ]; then
+  export SLOW_HOME=${PROGRAMS}/slow
+  export SLOWDRONE_HOME=${SLOW_HOME}/drone
+fi
+
+if [ -d ${PROGRAMS}/gocode ]; then
+  export GOPATH=${PROGRAMS}/gocode
+  export GOBIN=${GOPATH}/bin
+fi
+
+# CppAD
+if [ -d $MY_INCLUDES_PATH/CppAD/build/pkgconfig ]; then
+   el=${MY_INCLUDES_PATH}/CppAD/build/pkgconfig
+  case ":$PKG_CONFIG_PATH:" in
+    *":$el:"*) :;;
+    *) export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$el";;
+  esac
+ 
+fi
+
+# CxxTest
+if [ -d ${PROGRAMS}/cxxtest/bin ]; then
+  el=${PROGRAMS}/cxxtest/bin
+  case ":$PATH:" in
+    *":$el:"*) :;;
+    *) export PATH="$PATH:$el";;
+  esac
+fi
+
+# npm global
+if [ -d ${HOME}/.npm-global ]; then
+  el=${HOME}/.npm-global/bin
+  case ":$PATH:" in
+    *":$el:"*) :;;
+    *) export PATH="$PATH:$el";;
+  esac
+fi
+
+
+# LV2 bundles
+if [ -d ${PROGRAMS}/audio ]; then
+  export LV2_PATH="$HOME/.lv2:/usr/local/lib/lv2:/usr/lib/lv2"
+  el=${PROGRAMS}/audio
+  case ":$LV2_PATH:" in
+    *":$el:"*) :;;
+    *) export LV2_PATH="$LV2_PATH:$el";;
+  esac
+fi
+
+# Cuda 8
+if [ -d /usr/local/cuda-8.0/bin ]; then
+  el=/usr/local/cuda-8.0/bin
+  case ":$PATH:" in
+    *":$el:"*) :;;
+    *) export PATH="$PATH:$el";;
+  esac
+fi
+
+
 
 ##########################################################################
 # Define aliases
 
+alias tmux='tmux -2'
 alias UE4Editor='/home/eric/Programs/UnrealEngine/Engine/Binaries/Linux/UE4Editor'
 alias l='ls -CF'
 alias la='ls -A'
 alias ll='ls -alF'
 alias ls='ls --color=auto'
 alias opencv='~/Scripts/.compile_opencv.sh'
-alias studio.sh='/home/eric/Programs/android-studio/bin/studio.sh'
 alias script_dir='( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )'
+# Connect to desktop on Netgear6400 router via tmux/no tmux via ssh
+alias erok_funk='ssh -p 34433 erok@69.143.200.105 -t tmux -2 a'
+alias erok_funk_local='ssh -p 34433 erok@192.168.1.36 -t tmux -2 a'
+alias erok_funx='ssh -p 34433 erok@69.143.200.105 -t -X tmux -2 a'
+alias erok_funk_nt='ssh -p 34433 erok@69.143.200.105'
+alias erok_funx_nt='ssh -p 34433 erok@69.143.200.105 -X'
+# Script for comparing vicon data to rosbag data for snapdragon->elka
+alias vicon_compare="python $SNAPDRAGON_HOME/utils/compare_vicon.py"
+#alias source_kinetic="source /opt/ros/kinetic/setup.bash"
+alias bs="source $HOME/.bashrc"
+
+# Start matlab with software opengl rendering
+alias matlab='matlab -softwareopengl'
 
 #########################################################################
 # Define macros
@@ -421,3 +561,6 @@ alias script_dir='( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )'
 
 export TERPCOPTER_IP=192.168.0.243
 export MY_PC_IP=192.168.0.106
+
+
+. /home/eric/Programs/torch/install/bin/torch-activate

@@ -27,9 +27,12 @@ set-option -g default-terminal "screen-256color" #"xterm-256color" # "screen-256
 set-option -g pane-active-border-fg green
 
 # use mouse # More on mouse support http://floriancrouzat.net/2010/07/run-tmux-with-mouse-support-in-mac-os-x-terminal-app/
-setw -g mode-mouse on
+#setw -g mode-mouse on
+set -g mouse on
 set -g mouse-select-pane on
 set -g terminal-overrides 'xterm*:smcup@:rmcup@'
+bind-key m set -g mouse on
+bind-key M set -g mouse off
 
 #List of plugins
 set -g @plugin 'tmux-plugins/tpm'
@@ -95,3 +98,6 @@ set-option -g base-index 1
 
 #fzf-locate
 bind-key -n 'M-`' run "tmux split-window -p 40 'tmux send-keys -t #{pane_id} \"$(locate / | fzf -m | paste -sd\\ -)\"'"
+
+# Use Ctrl-A as Ctrl-B for remote session
+bind-ke -n C-a send-prefix

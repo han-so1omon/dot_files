@@ -35,8 +35,12 @@ Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'fatih/vim-go'
 " plugin on GitHub repo
 Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-dispatch'
+Plugin 'tpope/vim-commentary'
 " jellybeans color scheme
 Plugin 'nanotech/jellybeans.vim'
+" Nord color scheme
+Plugin 'arcticicestudio/nord-vim'
 " June Gunn's fuzzy finder
 Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plugin 'junegunn/fzf.vim'
@@ -46,6 +50,10 @@ Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'majutsushi/tagbar'
 " NERDtree file sidebar
 Plugin 'scrooloose/nerdtree'
+Plugin 'JuliaEditorSupport/julia-vim'
+Plugin 'vim-erlang/vim-erlang-runtime'
+Plugin 'vim-scripts/ZoomWin'
+Plugin 'liuchengxu/vim-which-key'
 call vundle#end()         " required
 
 filetype plugin indent on " required
@@ -200,6 +208,11 @@ set expandtab
 set tabpagemax=100
 
 "------------------------------------------------------------
+" Colorscheme
+let g:nord_comment_brightness = 15
+colorscheme nord
+
+"------------------------------------------------------------
 " Pathogen and Syntastic
 execute pathogen#infect()
 call pathogen#infect()
@@ -218,6 +231,8 @@ call pathogen#infect()
 "let g:pymode_rope_lookup_project = 0
 "let g:pymode_rope = 0
 autocmd VimEnter * SyntasticToggleMode " Syntastic passive mode by default
+
+let g:syntastic_disabled_filetypes=['m']
 
 "------------------------------------------------------------
 " merlin and ocp-indent for ocaml
@@ -345,10 +360,15 @@ inoremap <expr> <c-x><c-k> fzf#complete('cat /usr/share/dict/words')
 " Vim + Ctags + Ctrlp
 nnoremap <leader>. :CtrlPTag<cr>
 
-
 " Tagbar
 nmap <F8> :TagbarToggle<CR>
 
 " NERDtree
 map <C-n> :NERDTreeToggle<CR>
+
+" ZoomWin
+nnoremap <silent> <C-w>w :ZoomWin<CR>
+
+" vim-which-key
+nnoremap <silent> <leader> :WhichKey '\'<CR>
 "------------------------------------------------------------
