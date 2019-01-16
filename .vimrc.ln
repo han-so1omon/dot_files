@@ -208,11 +208,6 @@ set expandtab
 set tabpagemax=100
 
 "------------------------------------------------------------
-" Colorscheme
-let g:nord_comment_brightness = 15
-colorscheme nord
-
-"------------------------------------------------------------
 " Pathogen and Syntastic
 execute pathogen#infect()
 call pathogen#infect()
@@ -372,3 +367,4 @@ nnoremap <silent> <C-w>w :ZoomWin<CR>
 " vim-which-key
 nnoremap <silent> <leader> :WhichKey '\'<CR>
 "------------------------------------------------------------
+
