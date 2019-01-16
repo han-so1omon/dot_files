@@ -41,6 +41,7 @@ Plugin 'tpope/vim-commentary'
 Plugin 'nanotech/jellybeans.vim'
 " Nord color scheme
 Plugin 'arcticicestudio/nord-vim'
+Plugin 'altercation/vim-colors-solarized'
 " June Gunn's fuzzy finder
 Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plugin 'junegunn/fzf.vim'
