@@ -23,55 +23,59 @@ set nobackup
 filetype off
 
 " Vundle requirements
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+call plug#begin()
 
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
-" Vundle bundles
+" Vim-plug bundles
 " vim-tmux-navigator
-Plugin 'christoomey/vim-tmux-navigator'
+Plug 'christoomey/vim-tmux-navigator'
 " Go syntax highlighting
-Plugin 'fatih/vim-go'
+Plug 'fatih/vim-go'
 " plugin on GitHub repo
-Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-dispatch'
-Plugin 'tpope/vim-commentary'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-dispatch'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-pathogen'
 " jellybeans color scheme
-Plugin 'nanotech/jellybeans.vim'
+Plug 'nanotech/jellybeans.vim'
 " Nord color scheme
-Plugin 'arcticicestudio/nord-vim'
-Plugin 'altercation/vim-colors-solarized'
+Plug 'arcticicestudio/nord-vim'
+Plug 'altercation/vim-colors-solarized'
 " June Gunn's fuzzy finder
-Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plugin 'junegunn/fzf.vim'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
 " ctrlp vim tags
-Plugin 'ctrlpvim/ctrlp.vim'
+Plug 'ctrlpvim/ctrlp.vim'
 " vim tagbar
-Plugin 'majutsushi/tagbar'
+Plug 'majutsushi/tagbar'
 " NERDtree file sidebar
-Plugin 'scrooloose/nerdtree'
-Plugin 'JuliaEditorSupport/julia-vim'
-Plugin 'vim-erlang/vim-erlang-runtime'
-Plugin 'vim-scripts/ZoomWin'
-Plugin 'liuchengxu/vim-which-key'
-call vundle#end()         " required
+Plug 'scrooloose/nerdtree'
+Plug 'JuliaEditorSupport/julia-vim'
+Plug 'vim-erlang/vim-erlang-runtime'
+Plug 'vim-scripts/ZoomWin'
+Plug 'liuchengxu/vim-which-key'
+Plug 'MilesCranmer/gso'
+Plug 'leafgarland/typescript-vim'
+Plug 'dense-analysis/ale'
+Plug 'bufbuild/vim-buf'
+Plug 'jparise/vim-graphql'
+Plug 'maxmellon/vim-jsx-pretty'
+Plug 'godoctor/godoctor.vim'
+Plug 'mattn/emmet-vim'
+Plug 'supercollider/scvim'
+Plug 'guns/vim-clojure-static'
+Plug 'tpope/vim-fireplace'
+Plug 'tpope/vim-classpath'
+Plug 'tpope/vim-salve'
+Plug 'kien/rainbow_parentheses.vim'
+Plug 'rust-lang/rust.vim'
+Plug 'pechorin/any-jump.vim'
+Plug 'mhinz/vim-startify'
+call plug#end()         " required
 
-filetype plugin indent on " required
-
-" Brief Vundle help
-" :PluginList         - lists configured plugins
-" :PluginInstall      - installs plugins; append! '!' to update or just
-"                       :PluginUpdate
-" :PluginSearch foo   - Searches for foo; append '!' to refresh local
-"                       cache
-" :PluginClean        - confirms removal of unused plugins; append '!'
-"                       to auto-approve removal
-" see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after this line
+"filetype plugin indent on " required
 
 " Enable syntax highlighting
-syntax on
+"syntax on
 
 " Enable toggle for auto-indenting on pasting
 nnoremap <F2> :set invpaste paste?<CR>
@@ -118,7 +122,6 @@ set hlsearch
 " such, it may be a good idea to disable them and use the securemodelines
 " script, <http://www.vim.org/scripts/script.php?script_id=1876>.
 " set nomodeline
-
 
 "------------------------------------------------------------
 " Usability options {{{1
@@ -199,36 +202,14 @@ autocmd BufNewFile,BufRead *.ys set nosmartindent
 
 " Indentation settings for using 4 spaces instead of tabs.
 " Do not change 'tabstop' from its default value of 8 with this setup.
-set shiftwidth=2
-set softtabstop=2
-set tabstop=2
+set shiftwidth=4
+set softtabstop=4
+set tabstop=4
 set expandtab
 
 "------------------------------------------------------------
 " Max tabs open
 set tabpagemax=100
-
-"------------------------------------------------------------
-" Pathogen and Syntastic
-execute pathogen#infect()
-call pathogen#infect()
-
-"set statusline+=%#warningmsg#
-"set statusline+=%{exists('g:loaded_syntastic_plugin')?SyntasticStatuslineFlag():''}
-""set statusline+=%{SyntasticStatuslineFlag()}
-"set statusline+=%*
-
-"let g:syntastic_always_populate_loc_list = 1
-"let g:syntastic_auto_loc_list = 1
-"let g:syntastic_check_on_open = 1
-"let g:syntastic_check_on_wq = 0
-"let g:syntastic_mode_map = { 'passive_filetypes': ['python'] }
-"let g:pymode_lint_on_write = 0
-"let g:pymode_rope_lookup_project = 0
-"let g:pymode_rope = 0
-autocmd VimEnter * SyntasticToggleMode " Syntastic passive mode by default
-
-let g:syntastic_disabled_filetypes=['m']
 
 "------------------------------------------------------------
 " merlin and ocp-indent for ocaml
@@ -269,6 +250,49 @@ autocmd FileType matlab setlocal keywordprg=info\ octave\ --vi-keys\ --index-sea
 " autocmd FileType matlab setlocal keywordprg=info\ matlab\ --vi-keys\ --index-search
 "
 let g:syntastic_mode_map = { 'passive_filetypes': ['matlab'] }
+
+"-----------------------------------------------------------"
+" Colorscheme
+colorscheme jellybeans
+
+"-----------------------------------------------------------"
+" dense-analysis/ale
+" let g:ale_lint_on_enter = 0
+let g:ale_linters = {
+        \'cpp': [ 'clangtidy' ],
+        \'proto': ['buf-check-lint',],
+        \'javascript': ['eslint',],
+        \'javascriptreact': ['eslint',],
+        \'typescript': ['eslint',],
+        \'typescriptreact': ['eslint',],
+\}
+let g:ale_fixers = {
+        \'*': ['remove_trailing_lines', 'trim_whitespace'],
+        \'cpp': [ 'clangtidy' ],
+        \'rs': [ 'rustfmt' ],
+        \'javascript': ['prettier', 'eslint'],
+        \'javascriptreact': ['prettier', 'eslint'],
+        \'typescript': ['prettier', 'eslint'],
+        \'typescriptreact': ['prettier', 'eslint'],
+        \'css': ['prettier'],
+\}
+let g:ale_linters_explicit = 1
+let g:ale_fix_on_save = 1
+let g:ale_lint_on_save = 1
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_cpp_clang_options = '-std=c++14 -Wall -Ibuild'
+let g:ale_cpp_gcc_options = '-std=c++14 -Wall -Ibuild'
+let g:ale_cpp_clangtidy_options = '-Ibuild'
+
+"-----------------------------------------------------------"
+let g:vim_jsx_pretty_template_tags = ['html', 'jsx', 'div']
+
+"-----------------------------------------------------------"
+
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
 
 "-----------------------------------------------------------"
 " Mappings {{{1
@@ -368,4 +392,3 @@ nnoremap <silent> <C-w>w :ZoomWin<CR>
 " vim-which-key
 nnoremap <silent> <leader> :WhichKey '\'<CR>
 "------------------------------------------------------------
-
